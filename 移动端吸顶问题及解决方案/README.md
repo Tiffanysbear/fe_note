@@ -23,10 +23,12 @@ position：fixed给移动端带来的问题：
 
  使用时，需要加上私有前缀
 
+```javacript
 	position: -webkit-sticky;
 	position: -moz-sticky;
 	position: -ms-sticky;
 	position: sticky; 
+```
 	
 对于``` position：sticky ``` 的	使用，需要注意很多的细节，sticky满足以下条件才能生效：
 
@@ -44,6 +46,7 @@ position：fixed给移动端带来的问题：
 
 滚动距离超过某位置时，js动态设置样式；为了防止惯性滚动引起的fix不及时的情况，在``` touchstart```、 ```touchmove``` 、``` touchend ```事件都进行监听。
 
+```javacript
 	     // 注意处理遮罩层的位置
         var scrollHandler = function () {
             if (topLength < me.getScrollTop()) {
@@ -67,7 +70,7 @@ position：fixed给移动端带来的问题：
                 setTimeout(scrollHandler, 1000);
             });
         }
-
+```
 ### 不支持sticky
 
 如果浏览器不支持position:sticky，那么就使用js动态的在节点在fixed定位于static定位中切换，但是需要对切换过程做一些优化。
@@ -78,6 +81,7 @@ position：fixed给移动端带来的问题：
 *** 
 参照 [原文代码](https://segmentfault.com/a/1190000008004300)
 
+```javacript
 		(function() {
 		    function Sticky(){
 		        this.init.apply(this, arguments);
@@ -281,10 +285,11 @@ position：fixed给移动端带来的问题：
 		        return new Sticky(options);
 	    	};
 	})();
-
+```
 
 html 结构：
 
+```html
 	<div class="m-nav">
    		<div class="nav-fixed fixed" id="j-nav" style="position: fixed; top: 0px; z-index: 100;">
        	<ul class="f-cb">
@@ -294,10 +299,11 @@ html 结构：
           </ul>
        </div>
 	</div>
-	
+```
 
 css 结构：
 
+```css
 	.g-page-box .m-nav {
 	 	height: 1.33333rem;
 	}
@@ -317,6 +323,8 @@ css 结构：
 		top: 0px;
 		z-index: 100;
 	}
+	
+```
 
 
 
