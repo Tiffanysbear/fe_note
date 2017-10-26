@@ -46,7 +46,7 @@ position：fixed给移动端带来的问题：
 
 滚动距离超过某位置时，js动态设置样式；为了防止惯性滚动引起的fix不及时的情况，在``` touchstart```、 ```touchmove``` 、``` touchend ```事件都进行监听。
 
-```javacript
+```javascript
 	     // 注意处理遮罩层的位置
         var scrollHandler = function () {
             if (topLength < me.getScrollTop()) {
@@ -81,7 +81,7 @@ position：fixed给移动端带来的问题：
 *** 
 参照 [原文代码](https://segmentfault.com/a/1190000008004300)
 
-```javacript
+```javascript
 		(function() {
 		    function Sticky(){
 		        this.init.apply(this, arguments);
