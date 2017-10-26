@@ -47,29 +47,29 @@ position：fixed给移动端带来的问题：
 滚动距离超过某位置时，js动态设置样式；为了防止惯性滚动引起的fix不及时的情况，在``` touchstart```、 ```touchmove``` 、``` touchend ```事件都进行监听。
 
 ```javascript
-	     // 注意处理遮罩层的位置
-        var scrollHandler = function () {
-            if (topLength < me.getScrollTop()) {
-                target.css('position', 'fixed');
-                me.replaceEle.show();
-            }
-            else {
-                target.css('position', 'relative');
-                me.replaceEle.hide();
-            }
-        };
-        // 安卓情况下，防止惯性滚动引起的fix不及时的情况
-        if (/(Android)/i.test(navigator.userAgent)) {
-
-            $(window).on('scroll', scrollHandler);
-
-            $(document.body).on('touchstart', scrollHandler);
-            $(document.body).on('touchmove', scrollHandler);
-            $(document.body).on('touchend', function () {
-                scrollHandler();
-                setTimeout(scrollHandler, 1000);
-            });
+	// 注意处理遮罩层的位置
+    var scrollHandler = function () {
+        if (topLength < me.getScrollTop()) {
+            target.css('position', 'fixed');
+            me.replaceEle.show();
         }
+        else {
+            target.css('position', 'relative');
+            me.replaceEle.hide();
+        }
+    };
+    // 安卓情况下，防止惯性滚动引起的fix不及时的情况
+    if (/(Android)/i.test(navigator.userAgent)) {
+
+        $(window).on('scroll', scrollHandler);
+
+        $(document.body).on('touchstart', scrollHandler);
+        $(document.body).on('touchmove', scrollHandler);
+        $(document.body).on('touchend', function () {
+            scrollHandler();
+            setTimeout(scrollHandler, 1000);
+        });
+    }
 ```
 ### 不支持sticky
 
@@ -82,209 +82,209 @@ position：fixed给移动端带来的问题：
 参照 [原文代码](https://segmentfault.com/a/1190000008004300)
 
 ```javascript
-		(function() {
-		    function Sticky(){
-		        this.init.apply(this, arguments);
-		    }
-		
-		    /**
-		     * 滚动fixed组件初始化
-		     * @param {object}         setting                allocate传进来的参数
-		     * @param {object}         setting.stickyNode     需要设置position:sticky的节点，通常是最外层
-		     * @param {object}         setting.fixedNode      当滚动一定距离时需要fixed在顶部的节点
-		     * @param {int}            setting.top            fixed之后距离顶部的top值
-		     * @param {int}            setting.zIndex         fixed之后的z-index值
-		     * @param {string}         setting.fixedClazz     fixed时给fixedNode添加的类
-		     * @param {function}     setting.runInScrollFn  滚动期间额外执行的函数
-		     * @return {void}  
-		     */
-		    Sticky.setting = {
-		        stickyNode: null,
-		        fixedNode: null,
-		        top: 0,
-		        zIndex: 100,
-		        fixedClazz: '',
-		        runInScrollFn: null
-		    };
-		    var sPro = Sticky.prototype;
-		    var g = window;
-		
-		    /**
-		     * 初始化
-		     * @param  {object} options 设置
-		     * @return {void}         
-		     */
-		    sPro.init = function(options){
-		        this.setting = $.extend({}, Sticky.setting, options, true);
-		        if (options.fixedNode) {
-		            this.fixedNode = options.fixedNode[0] || options.fixedNode;
-		            this.stickyNode = options.stickyNode[0] || options.stickyNode;
-		            this.cssStickySupport = this.checkStickySupport();
-		            this.stickyNodeHeight = this.stickyNode.clientHeight;
-		            this.fixedClazz = options.fixedClazz;
-		            this.top = parseInt(options.top, 10) || 0;
-		            this.zIndex = parseInt(options.zIndex) || 1;
-		            this.setStickyCss();
-		            this.isfixed = false;
-		            // 把改变定位的操作添加到节流函数与window.requestAnimationFrame方法中，确保一定事件内必须执行一次
-		            this.onscrollCb = this.throttle(function() {
-		                this.nextFrame(this.sticky.bind(this));
-		            }.bind(this), 50, 100);
-		            this.initCss = this.getInitCss();
-		            this.fixedCss = this.getFixedCss();
-		            this.addEvent();
-		        }
-		    };
-		
-		    /**
-		     * 获取原始css样式
-		     * @return {string} 定位的样式
-		     */
-		    sPro.getInitCss = function() {
-		        if (!!this.fixedNode) {
-		            return "position:" + this.fixedNode.style.position + ";top:" + this.fixedNode.style.top + "px;z-index:" + this.fixedNode.style.zIndex + ";";
-		        }
-		        return "";
-		    };
-		
-		    /**
-		     * 生成fixed时的css样式
-		     * @return {void}
-		     */
-		    sPro.getFixedCss = function() {
-		        return "position:fixed;top:" + this.top + "px;z-index:" + this.zIndex + ";";
-		    };
-		
-		    /**
-		     * 给fixedNode设置fixed定位样式
-		     * @param {string} style fixed定位的样式字符串
-		     */
-		    sPro.setFixedCss = function(style) {
-		        if(!this.cssStickySupport){
-		            if (!!this.fixedNode){
-		                this.fixedNode.style.cssText = style;
-		            }
-		        }
-		    };
-		
-		    /**
-		     * 检查浏览器是否支持positon: sticky定位
-		     * @return {boolean} true 支持 false 不支持
-		     */
-		    sPro.checkStickySupport = function() {
-		        var div= null;
-		        if(g.CSS && g.CSS.supports){
-		            return g.CSS.supports("(position: sticky) or (position: -webkit-sticky)");
-		        }
-		        div = document.createElement("div");
-		        div.style.position = "sticky";
-		        if("sticky" === div.style.position){
-		            return true;
-		        }
-		        div.style.position = "-webkit-sticky";
-		        if("-webkit-sticky" === div.style.position){
-		            return true;
-		        }
-		        div = null;
-		        return false;
-		    };
-		
-		    /**
-		     * 给sticyNode设置position: sticky定位
-		     */
-		    sPro.setStickyCss = function() {
-		        if(this.cssStickySupport){
-		            this.stickyNode.style.cssText = "position:-webkit-sticky;position:sticky;top:" + this.top + "px;z-index:" + this.zIndex + ";";
-		        }
-		    };
-		
-		    /**
-		     * 监听window的滚动事件
-		     */
-		    sPro.addEvent = function() {
-		        $(g).on('scroll', this.onscrollCb.bind(this));
-		    };
-		
-		    /**
-		     * 让函数在规定时间内必须执行一次
-		     * @param {Function} fn     定时执行的函数
-		     * @param {int}      delay  延迟多少毫秒执行
-		     * @param {[type]}   mustRunDelay 多少毫秒内必须执行一次
-		     * @return {[type]}      [description]
-		     */
-		    sPro.throttle = function(fn, delay, mustRunDelay){
-		        var timer = null;
-		        var lastTime;
-		        return function(){
-		            var now = +new Date();
-		            var args = arguments;
-		            g.clearTimeout(timer);
-		            if(!lastTime){
-		                lastTime = now;
-		            }
-		            if(now - lastTime > mustRunDelay){
-		                fn.apply(this, args);
-		                lastTime = now;
-		            }else{
-		                g.setTimeout(function(){
-		                    fn.apply(this, args);
-		                }.bind(this), delay);
-		            }
-		        }.bind(this);
-		    };
-		
-		    /**
-		     * window.requestAnimationFrame的兼容性写法，保证在100/6ms执行一次
-		     * @param  {Function} fn 100/16ms需要执行的函数
-		     * @return {void}      
-		     */
-		    sPro.nextFrame = (function(fn){
-		        var prefix = ["ms", "moz", "webkit", "o"];
-		        var handle = {};
-		        handle.requestAnimationFrame = window.requestAnimationFrame;
-		        for(var i = 0; i < prefix.length && !handle.requestAnimationFrame; ++i){
-		            handle.requestAnimationFrame = window[prefix[i] + "RequestAnimationFrame"];
-		        }
-		        if(!handle.requestAnimationFrame){
-		            handle.requestAnimationFrame = function(fn) {
-		                var raf = window.setTimeout(function() {
-		                    fn();
-		                }, 16);
-		                return raf;
-		            };
-		        }
-		        return function(fn) {
-		            handle.requestAnimationFrame.apply(g, arguments);
-		        }
-		    })();
-		
-		    /**
-		     * 判断stickyNode的当前位置设置fixed|static|sticky定位
-		     * @return {void}
-		     */
-		    sPro.sticky = function() {
-		        this.setting.runInScrollFn && this.setting.runInScrollFn();
-		        var stickyNodeBox = this.stickyNode.getBoundingClientRect();
-		        if(stickyNodeBox.top <= this.top && !this.isfixed){
-		            this.setFixedCss(this.fixedCss);
-		            this.fixedClazz && $(this.fixedNode).addClass(this.fixedClazz);
-		            this.isfixed = true;
-		            $(this).trigger('onsticky', true);
-		        } else if(stickyNodeBox.top > this.top && this.isfixed) {
-		            this.setFixedCss(this.initCss.replace(/position:[^;]*/, "position:static"));
-		            g.setTimeout(function() {
-		                this.setFixedCss(this.initCss)
-		            }.bind(this), 30);
-		            this.fixedClazz && $(this.fixedNode).removeClass(this.fixedClazz);
-		            this.isfixed = false;
-		            $(this).trigger('onsticky', true);
-		        }
-		    };
-		
-		    $.initSticky = function(options){
-		        return new Sticky(options);
-	    	};
-	})();
+	(function() {
+	    function Sticky(){
+	        this.init.apply(this, arguments);
+	    }
+	
+	    /**
+	     * 滚动fixed组件初始化
+	     * @param {object}         setting                allocate传进来的参数
+	     * @param {object}         setting.stickyNode     需要设置position:sticky的节点，通常是最外层
+	     * @param {object}         setting.fixedNode      当滚动一定距离时需要fixed在顶部的节点
+	     * @param {int}            setting.top            fixed之后距离顶部的top值
+	     * @param {int}            setting.zIndex         fixed之后的z-index值
+	     * @param {string}         setting.fixedClazz     fixed时给fixedNode添加的类
+	     * @param {function}     setting.runInScrollFn  滚动期间额外执行的函数
+	     * @return {void}  
+	     */
+	    Sticky.setting = {
+	        stickyNode: null,
+	        fixedNode: null,
+	        top: 0,
+	        zIndex: 100,
+	        fixedClazz: '',
+	        runInScrollFn: null
+	    };
+	    var sPro = Sticky.prototype;
+	    var g = window;
+	
+	    /**
+	     * 初始化
+	     * @param  {object} options 设置
+	     * @return {void}         
+	     */
+	    sPro.init = function(options){
+	        this.setting = $.extend({}, Sticky.setting, options, true);
+	        if (options.fixedNode) {
+	            this.fixedNode = options.fixedNode[0] || options.fixedNode;
+	            this.stickyNode = options.stickyNode[0] || options.stickyNode;
+	            this.cssStickySupport = this.checkStickySupport();
+	            this.stickyNodeHeight = this.stickyNode.clientHeight;
+	            this.fixedClazz = options.fixedClazz;
+	            this.top = parseInt(options.top, 10) || 0;
+	            this.zIndex = parseInt(options.zIndex) || 1;
+	            this.setStickyCss();
+	            this.isfixed = false;
+	            // 把改变定位的操作添加到节流函数与window.requestAnimationFrame方法中，确保一定事件内必须执行一次
+	            this.onscrollCb = this.throttle(function() {
+	                this.nextFrame(this.sticky.bind(this));
+	            }.bind(this), 50, 100);
+	            this.initCss = this.getInitCss();
+	            this.fixedCss = this.getFixedCss();
+	            this.addEvent();
+	        }
+	    };
+	
+	    /**
+	     * 获取原始css样式
+	     * @return {string} 定位的样式
+	     */
+	    sPro.getInitCss = function() {
+	        if (!!this.fixedNode) {
+	            return "position:" + this.fixedNode.style.position + ";top:" + this.fixedNode.style.top + "px;z-index:" + this.fixedNode.style.zIndex + ";";
+	        }
+	        return "";
+	    };
+	
+	    /**
+	     * 生成fixed时的css样式
+	     * @return {void}
+	     */
+	    sPro.getFixedCss = function() {
+	        return "position:fixed;top:" + this.top + "px;z-index:" + this.zIndex + ";";
+	    };
+	
+	    /**
+	     * 给fixedNode设置fixed定位样式
+	     * @param {string} style fixed定位的样式字符串
+	     */
+	    sPro.setFixedCss = function(style) {
+	        if(!this.cssStickySupport){
+	            if (!!this.fixedNode){
+	                this.fixedNode.style.cssText = style;
+	            }
+	        }
+	    };
+	
+	    /**
+	     * 检查浏览器是否支持positon: sticky定位
+	     * @return {boolean} true 支持 false 不支持
+	     */
+	    sPro.checkStickySupport = function() {
+	        var div= null;
+	        if(g.CSS && g.CSS.supports){
+	            return g.CSS.supports("(position: sticky) or (position: -webkit-sticky)");
+	        }
+	        div = document.createElement("div");
+	        div.style.position = "sticky";
+	        if("sticky" === div.style.position){
+	            return true;
+	        }
+	        div.style.position = "-webkit-sticky";
+	        if("-webkit-sticky" === div.style.position){
+	            return true;
+	        }
+	        div = null;
+	        return false;
+	    };
+	
+	    /**
+	     * 给sticyNode设置position: sticky定位
+	     */
+	    sPro.setStickyCss = function() {
+	        if(this.cssStickySupport){
+	            this.stickyNode.style.cssText = "position:-webkit-sticky;position:sticky;top:" + this.top + "px;z-index:" + this.zIndex + ";";
+	        }
+	    };
+	
+	    /**
+	     * 监听window的滚动事件
+	     */
+	    sPro.addEvent = function() {
+	        $(g).on('scroll', this.onscrollCb.bind(this));
+	    };
+	
+	    /**
+	     * 让函数在规定时间内必须执行一次
+	     * @param {Function} fn     定时执行的函数
+	     * @param {int}      delay  延迟多少毫秒执行
+	     * @param {[type]}   mustRunDelay 多少毫秒内必须执行一次
+	     * @return {[type]}      [description]
+	     */
+	    sPro.throttle = function(fn, delay, mustRunDelay){
+	        var timer = null;
+	        var lastTime;
+	        return function(){
+	            var now = +new Date();
+	            var args = arguments;
+	            g.clearTimeout(timer);
+	            if(!lastTime){
+	                lastTime = now;
+	            }
+	            if(now - lastTime > mustRunDelay){
+	                fn.apply(this, args);
+	                lastTime = now;
+	            }else{
+	                g.setTimeout(function(){
+	                    fn.apply(this, args);
+	                }.bind(this), delay);
+	            }
+	        }.bind(this);
+	    };
+	
+	    /**
+	     * window.requestAnimationFrame的兼容性写法，保证在100/6ms执行一次
+	     * @param  {Function} fn 100/16ms需要执行的函数
+	     * @return {void}      
+	     */
+	    sPro.nextFrame = (function(fn){
+	        var prefix = ["ms", "moz", "webkit", "o"];
+	        var handle = {};
+	        handle.requestAnimationFrame = window.requestAnimationFrame;
+	        for(var i = 0; i < prefix.length && !handle.requestAnimationFrame; ++i){
+	            handle.requestAnimationFrame = window[prefix[i] + "RequestAnimationFrame"];
+	        }
+	        if(!handle.requestAnimationFrame){
+	            handle.requestAnimationFrame = function(fn) {
+	                var raf = window.setTimeout(function() {
+	                    fn();
+	                }, 16);
+	                return raf;
+	            };
+	        }
+	        return function(fn) {
+	            handle.requestAnimationFrame.apply(g, arguments);
+	        }
+	    })();
+	
+	    /**
+	     * 判断stickyNode的当前位置设置fixed|static|sticky定位
+	     * @return {void}
+	     */
+	    sPro.sticky = function() {
+	        this.setting.runInScrollFn && this.setting.runInScrollFn();
+	        var stickyNodeBox = this.stickyNode.getBoundingClientRect();
+	        if(stickyNodeBox.top <= this.top && !this.isfixed){
+	            this.setFixedCss(this.fixedCss);
+	            this.fixedClazz && $(this.fixedNode).addClass(this.fixedClazz);
+	            this.isfixed = true;
+	            $(this).trigger('onsticky', true);
+	        } else if(stickyNodeBox.top > this.top && this.isfixed) {
+	            this.setFixedCss(this.initCss.replace(/position:[^;]*/, "position:static"));
+	            g.setTimeout(function() {
+	                this.setFixedCss(this.initCss)
+	            }.bind(this), 30);
+	            this.fixedClazz && $(this.fixedNode).removeClass(this.fixedClazz);
+	            this.isfixed = false;
+	            $(this).trigger('onsticky', true);
+	        }
+	    };
+	
+	    $.initSticky = function(options){
+	        return new Sticky(options);
+    	};
+})();
 ```
 
 html 结构：
