@@ -3,7 +3,7 @@
 
 ## tap击穿问题 
 ### 问题描述
-绑定tap方法的dom元素，触发该方法时，该dom元素下方同一位置的dom元素会触发click事件或者有浏览器认为可以被点击交互的dom元素（input的focus事件），成为tap击穿现象。
+绑定tap方法的dom元素，触发该方法时，该dom元素下方同一位置的dom元素会触发click事件或者有浏览器认为可以被点击交互的dom元素（input的focus事件），称为tap击穿现象。
 ### 产生原因
 1、click事件在移动端会有300ms的延迟，因为需要检测双击事件。[移动端300ms延迟原因](https://www.telerik.com/blogs/what-exactly-is.....-the-300ms-click-delay)
 
