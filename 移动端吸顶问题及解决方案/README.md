@@ -13,7 +13,7 @@ position：fixed给移动端带来的问题：
 * 三星i9100(S2) / 自带浏览器，在滚屏过程中，fixed定位异常，touchend之后恢复正常。
 *  部分低版本Android对支持不好，video poster属性设置的封面图会遮挡fixed元素。
 *  QQ、UC浏览器滚动页面时footer定位错误，会往上偏移，是由于地址栏收起的缘故。
-*  <font color="red">*remind：不要在 fixed 元素中使用 input / textarea 元素。</font>
+*  <font color=red>*remind：不要在 fixed 元素中使用 input / textarea 元素。</font>
 
 ## 解决方案
 
@@ -74,8 +74,11 @@ position：fixed给移动端带来的问题：
 ### 不支持sticky
 
 如果浏览器不支持position:sticky，那么就使用js动态的在节点在fixed定位于static定位中切换，但是需要对切换过程做一些优化。
+
 1、使用函数节流防抖减少dom操作频繁粗发，但是保证在规定时间内必须执行一次。
+
 2、使用window.requestAnimationFrame 方法在下一帧前触发浏览器的强制同步布局，是对dom的操作能及时渲染到页面上。
+
 3、减少对dom的读写操作，或者把dom操作把读、写操作分开，可以减少渲染次数。
 
 *** 
