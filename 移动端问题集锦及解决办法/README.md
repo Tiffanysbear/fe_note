@@ -7,7 +7,7 @@
 ### 产生原因
 1、click事件在移动端会有300ms的延迟，因为需要检测双击事件。[移动端300ms延迟原因](https://www.telerik.com/blogs/what-exactly-is.....-the-300ms-click-delay)
 
-2、zepto的tap事件是绑定在document.body上的，tap事件执行（冒泡之后）之前，click事件已经被"执行"，只是被延迟了而已，所以在tap事件用preventDefault也没用
+2、zepto的tap事件是绑定在document.body上的，tap事件执行（冒泡之后）之前，click事件已经被"执行"，只是被延迟了而已，所以在tap事件用preventDefault也没用 
 
 3、
 ### 解决方案
