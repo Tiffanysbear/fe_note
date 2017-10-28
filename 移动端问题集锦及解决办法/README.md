@@ -41,3 +41,32 @@ function tap(ele, callback) {
 }
 
 ```
+
+## position: fixed + input输入框问题
+
+### 问题描述
+IOS下，当input输入框获取焦点focus，弹起虚拟键盘之后，页面上position: fixed的元素的位置会错乱。
+### 解决方案
+1、当input元素focus时，改成position: absolute，blur的时候再将定位改为 position: fixed
+
+2、使用iscroll库
+
+3、使用div内滚动
+
+## 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
