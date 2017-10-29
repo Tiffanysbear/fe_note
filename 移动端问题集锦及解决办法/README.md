@@ -71,9 +71,9 @@ iOS 与 OS X 端字体的优化(横竖屏会出现字体加粗不一致等) iOS 
 ### 解决方案
 
 ```css
-	-webkit-text-size-adjust: 100%;
-	-ms-text-size-adjust: 100%;
-	text-size-adjust: 100%;
+-webkit-text-size-adjust: 100%;
+-ms-text-size-adjust: 100%;
+text-size-adjust: 100%;
 	
 ```
 
