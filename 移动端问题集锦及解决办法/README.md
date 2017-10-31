@@ -76,6 +76,26 @@ iOS 与 OS X 端字体的优化(横竖屏会出现字体加粗不一致等) iOS 
 text-size-adjust: 100%;
 	
 ```
+## 一些有用的属性
+### 不让 Android 手机识别邮箱
+```css
+<meta content="email=no" name="format-detection" />
+```
+### 禁止 iOS 识别长串数字为电话
+```css
+<meta content="telephone=no" name="format-detection" />
+```
+### 禁止 iOS 弹出各种操作窗口
+```css
+-webkit-touch-callout:none
+```
+### 禁止用户选中文字
+```css
+-webkit-user-select:none
+```
+
+## translate
+动画效果中，使用translate比使用定位性能高，且性能更好。
 
 
 
