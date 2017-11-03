@@ -97,6 +97,19 @@ text-size-adjust: 100%;
 ## translate
 动画效果中，使用translate比使用定位性能高，且性能更好。
 
+## 使用setTimeout
+
+### 问题描述
+使用下述的语句，会使得code立即执行
+
+```javascript
+   setTimeout(function(){
+     //.….code
+   },0);
+
+```
+原理：[JavaScript下的setTimeout(fn,0)意味着什么？](http://www.cnblogs.com/silin6/p/4333999.html)
+
 
 
 
