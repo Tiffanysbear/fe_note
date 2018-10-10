@@ -110,6 +110,21 @@ text-size-adjust: 100%;
 ```
 原理：[JavaScript下的setTimeout(fn,0)意味着什么？](http://www.cnblogs.com/silin6/p/4333999.html)
 
+## Safari浏览器input输入框
+### 问题描述
+在safari下，input输入框，点击时会有一个默认的小人出现，点击后会自动补充联系人的信息
+### 解决办法
+只有将其隐藏
+
+```css
+input::-webkit-contacts-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+```
 
 
 
