@@ -164,7 +164,7 @@ inputElement.addEventListener('input', function(event) {
 
 ## 移动端input文字输入-emoji表情输入
 ### 问题描述
-当输入emoji表情的时候，js中判断emoji表情的length为2，因此emoji正常应该最多只能输入8个，但是ios端却把emoji的length算为1。
+当输入emoji表情的时候，js中判断emoji表情的长度是不一致的，不同表情的length也不同，跟unicode编码有关。
 ### 解决办法
 限制字数，当超过字数限制的时候，把前16个字截断显示出来。
 
