@@ -126,6 +126,39 @@ input::-webkit-contacts-auto-fill-button {
 }
 ```
 
+## 移动端input文字输入-文字输入限制
+### 问题描述
+当用户进行中文输入时，input 事件会截断非直接输入，什么是非直接输入呢，在我们输入汉字的时候，比如说「开心」，中间过程中会输入拼音，每次输入一个字母都会触发 input 事件，然而在没有点选候选字或者点击「选定」按钮前，都属于非直接输入。
+此时，input事件需要结合compositionstart和compositionend 这两个事件。
+<br>
+compositionstart: 开始非直接输入开始时触发
+<br>
+compositionend：非直接输入结束时触发。
+```javascript
+var inputLock = false;
+function do(inputElement) {
+    var regex = /[^1-9a-zA-Z]/g;
+    inputElement.value = inputElement.value.replace(regex, '');
+}
+
+inputElement.addEventListener('compositionstart', function() {
+  inputLock = true;
+});
+
+
+inputElement.addEventListener('compositionend', function(event) {
+  inputLock = false;
+  do(event.target);
+})
+
+
+inputElement.addEventListener('input', function(event) {
+  if (!inputLock) {
+    do(event.target);
+    event.returnValue = false;
+  }
+});
+```
 
 
 
