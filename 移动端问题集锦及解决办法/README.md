@@ -129,6 +129,8 @@ input::-webkit-contacts-auto-fill-button {
 ## 移动端input文字输入-文字输入限制
 ### 问题描述
 当用户进行中文输入时，input 事件会截断非直接输入，什么是非直接输入呢，在我们输入汉字的时候，比如说「开心」，中间过程中会输入拼音，每次输入一个字母都会触发 input 事件，然而在没有点选候选字或者点击「选定」按钮前，都属于非直接输入。
+
+### 解决办法
 此时，input事件需要结合compositionstart和compositionend 这两个事件。
 <br>
 compositionstart: 开始非直接输入开始时触发
@@ -160,9 +162,42 @@ inputElement.addEventListener('input', function(event) {
 });
 ```
 
+## 移动端input文字输入-emoji表情输入
+### 问题描述
+当输入emoji表情的时候，js中判断emoji表情的length为2，因此emoji正常应该最多只能输入8个，但是ios端却把emoji的length算为1。
+### 解决办法
+限制字数，当超过字数限制的时候，把前16个字截断显示出来。
 
 
+## textarea置底展示问题
+ios中的输入唤起键盘后，整个页面会被键盘压缩，也就是说页面的高度变小，并且所有的fixed全部变为了absolute。键盘会将页面顶上去。那么如果希望可以将输入框和键盘完全贴合，我们可以使用div模拟一个假的输入框，使用定位将真正的输入框隐藏掉，当点击假的输入框的时候，将真正的输入框定位到键盘上方，并且手动获取输入框焦点。
+<br>
+在实现过程中需要注意下面几个问题：
+<br>
+1、真正的输入框的位置计算：
+<br>
+首先记录无键盘时的window.innerHeight，当键盘弹出后再获取当前的window.innerHeight，两者的差值即为键盘的高度，那么定位真输入框自然就很容易了
+<br>
+2、在ios下手动获取焦点不可以用click事件，需要使用tap事件才可以手动触发
+```javascript
+    $('#fake-input').on($.os.ios?'tap' : 'click', function() {
+        initHeight = window.innerHeight;
+        $('#input').focus();
+    });
+ ```
+3、当键盘收起的时候我们需要将真输入框再次隐藏掉，除了使用失去焦点（blur）方法，还有什么方法可以判断键盘是否收起呢？
+<br>
+这里可以使用setInterval监听，当当前window.innerHeight和整屏高度相等的时候判断为键盘收起。
+<br>
+注意：键盘弹起需要一点时间，所以计算当前屏幕高度也需要使用setInterval
+<br>
+4、因为textarea中的文字不能置底显示，当输入超过一行textarea需要自动调整高度，因此将scrollHeight赋值给textarea的height。当删除文字的时候需要height也有变化，因此每次input都先将height置0，然后再赋值。
+<br>
 
+```javascript
+    $('#textarea').css('height', 0);
+    $('#textarea').css('height', $('#textarea')[0].scrollHeight);
+  ```
 
 
 
